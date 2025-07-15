@@ -44,4 +44,19 @@ export default class UserUsecase {
 
         return { token }
     }
+
+    async getUserById({ id }) {
+        const getUser = await this.userRepository.findById(id);
+        if (!getUser) {
+            throw new Error(ErrorConstant.ErrorUserNotFound)
+        }
+
+        const userProfile = {
+            'id': getUser.id,
+            'name': getUser.name,
+            'role': getUser.role,
+        };
+
+        return userProfile
+    }
 }

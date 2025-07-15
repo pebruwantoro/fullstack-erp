@@ -26,7 +26,18 @@ export default class UserRepository {
     }
 
     async findByEmail(email){
-        const user = await UserModel.findOne({ where: { email } })
+        const user = await UserModel.findOne({ where: { 
+            email: email,
+            deleted_at: null,
+        } })
+        return _mapToEntity(user);
+    }
+
+    async findById(id){
+        const user = await UserModel.findOne({ where: { 
+            id: id,
+            deleted_at: null,
+        } })
         return _mapToEntity(user);
     }
 }
