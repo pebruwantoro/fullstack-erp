@@ -28,9 +28,7 @@ export default class UserController {
             res.status(200).json({
                 success: true,
                 message: "success login",
-                data: {
-                    'token': result,
-                }
+                data: result,
             })
         } catch (error){
             return res.status(401).json({
