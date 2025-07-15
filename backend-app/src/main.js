@@ -1,8 +1,10 @@
-import dotenv from 'dotenv';
-dotenv.config();
-import { appConfig } from './config.js';
 import express from 'express';
 import cors from 'cors';
+import swaggerUI from 'swagger-ui-express';
+import fs from 'fs';
+import YAML from 'yaml';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 
 import UserRepository from './application/repositories/userRepository.js';
@@ -28,7 +30,23 @@ const userRouter = userRoute(userController);
 
 app.use('/v1/api/users', userRouter)
 
-const PORT = appConfig.port;
+// SWAGGER DOCS API
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+let swaggerDocument;
+try {
+    const swaggerFile = path.join(__dirname, 'docs', 'openapi.yml');
+    const swaggerYml = fs.readFileSync(swaggerFile, 'utf-8');
+    swaggerDocument = YAML.parse(swaggerYml);
+} catch (error) {
+    console.error('Error reading openapi.yml: ', error);
+    process.exit(1);
+}
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
+
+const PORT = process.env.APP_PORT;
 app.listen(PORT, () => {
     console.log(`SERVER IS RUNNING ON PORT: ${PORT}`);
 });
