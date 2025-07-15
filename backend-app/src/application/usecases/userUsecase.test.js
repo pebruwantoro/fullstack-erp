@@ -130,6 +130,7 @@ describe('UserUsecase', () => {
       
       expect(result.id).toBe(id);
       expect(result.name).toBe('Existing User');
+      expect(result.email).toBe('test@example.com');
       expect(result.role).toBe(UserRole.CUSTOMER);
     });
 

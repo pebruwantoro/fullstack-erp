@@ -54,6 +54,7 @@ export default class UserUsecase {
         const userProfile = {
             'id': getUser.id,
             'name': getUser.name,
+            'email': getUser.email,
             'role': getUser.role,
         };
 
