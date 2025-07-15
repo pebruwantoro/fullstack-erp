@@ -75,4 +75,48 @@ describe('UserUsecase', () => {
       );
     });
   });
+
+  describe('loginUser', () => {
+    it('success login', async () => {
+      const userData = {
+        email: 'test@example.com',
+        password: '1234',
+      };
+
+      mockUserRepository.findByEmail.mockResolvedValue(new User(1, 'Existing User', 'test@example.com', '$2a$10$J8qh.eurZGQDk8o8EafJpOYlOvLGOSz7osjcIoiZ3I5rRyvFe0dpC', UserRole.CUSTOMER, new Date(), new Date(), null, 'admin', null, null));
+
+      const result = await userUsecase.loginUser(userData);
+
+      expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(userData.email);
+      expect(result.token).not.toBe('');
+      expect(result.token).not.toBe(NaN);
+      expect(result.token).not.toBe(undefined);
+    });
+
+    it('error user not found', async () => {
+      const userData = {
+        email: 'test@example.com',
+        password: '1234',
+      };
+
+      mockUserRepository.findByEmail.mockResolvedValue(null);
+
+      await expect(userUsecase.loginUser(userData)).rejects.toThrow(
+        ErrorConstant.ErrorInvalidCredentials
+      );
+    });
+
+    it('error password not match', async () => {
+      const userData = {
+        email: 'test@example.com',
+        password: 'wrong-password',
+      };
+
+      mockUserRepository.findByEmail.mockResolvedValue(new User(1, 'Existing User', 'test@example.com', '$2a$10$J8qh.eurZGQDk8o8EafJpOYlOvLGOSz7osjcIoiZ3I5rRyvFe0dpC', UserRole.CUSTOMER, new Date(), new Date(), null, 'admin', null, null));
+
+      await expect(userUsecase.loginUser(userData)).rejects.toThrow(
+        ErrorConstant.ErrorInvalidCredentials
+      );
+    });
+  });
 });

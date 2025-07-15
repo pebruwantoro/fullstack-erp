@@ -17,9 +17,6 @@ const sequelize = new Sequelize(
 const User = UserModel(sequelize, Sequelize);
 
 sequelize.sync({ alter: true })
-    .then(() => {
-        console.log('Database & tables was creating')
-    })
 
 
 export { sequelize, User }
