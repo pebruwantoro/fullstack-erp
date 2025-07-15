@@ -119,4 +119,29 @@ describe('UserUsecase', () => {
       );
     });
   });
+
+  describe('getUserById', () => {
+    it('success get user', async () => {
+      const id = 'user-id-1'
+
+      mockUserRepository.findById.mockResolvedValue(new User('user-id-1', 'Existing User', 'test@example.com', '$2a$10$J8qh.eurZGQDk8o8EafJpOYlOvLGOSz7osjcIoiZ3I5rRyvFe0dpC', UserRole.CUSTOMER, new Date(), new Date(), null, 'admin', null, null));
+
+      const result = await userUsecase.getUserById(id);
+      
+      expect(result.id).toBe(id);
+      expect(result.name).toBe('Existing User');
+      expect(result.email).toBe('test@example.com');
+      expect(result.role).toBe(UserRole.CUSTOMER);
+    });
+
+    it('error user not found', async () => {
+      const id = 'user-id-1'
+
+      mockUserRepository.findById.mockResolvedValue(null);
+
+      await expect(userUsecase.getUserById(id)).rejects.toThrow(
+        ErrorConstant.ErrorUserNotFound
+      );
+    });
+  });
 });
