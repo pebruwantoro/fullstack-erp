@@ -20,4 +20,21 @@ export default class UserController {
             });
         }
     }
+
+    async loginUser(req, res){
+        try {
+            const { email, password } = req.body;
+            const result = await this.userUsecase.loginUser({ email, password })
+            res.status(200).json({
+                success: true,
+                message: "success login",
+                data: result,
+            })
+        } catch (error){
+            return res.status(401).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
 }
