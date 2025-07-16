@@ -11,7 +11,7 @@ const _mapToEntity = (QuotationItemModelInstance) => {
     return {
         id,
         quotation_id: quotationId,
-        total_amount: productId,
+        product_id: productId,
         quantity,
         unit_price: unitPrice,
         sub_total: subTotal,

@@ -204,6 +204,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BaseErrorResponse'
+    
+    get:
+      tags:
+        - Quotations
+      summary: Get list quotations
+      description: Get list quotations.
+      security:
+        - bearerAuth: []
+      
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetListQuotationResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
 
   /v1/api/quotations/{id}/approve:
     put:
@@ -400,6 +423,26 @@ components:
           type: string
           example: 93c06d43-caaa-4171-a352-6783bf55384f
 
+    GetListQuotationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message: 
+          type: string
+          example: success approved quotation
+        data:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/Quotation'
+            pagination:
+              type: object
+              $ref: '#/components/schemas/Pagination'
+    
     Product:
       type: object
       properties:
@@ -441,6 +484,88 @@ components:
         price:
           type: integer
           example: 10000
+
+    Quotation:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 93c06d43-caaa-4171-a352-6783bf55384f
+        customer_id:
+          type: string
+          example: 93c06d43-caaa-4171-a352-6783bf55384f
+        status:
+          type: string
+          example: pending
+        total_amount:
+          type: integer
+          example: 1200000
+        items:
+          type: array
+          $ref: '#/components/schemas/QuotationItem'
+        created_at:
+          type: string
+          example:  "2025-07-16T04:23:33.826Z"
+        updated_at:
+          type: string
+          example:  "2025-07-16T04:23:33.826Z"
+        deleted_at:
+          type: string
+        created_by:
+          type: string
+          example:  93c06d43-caaa-4171-a352-6783bf55384f
+        updated_by:
+          type: string
+          example:  93c06d43-caaa-4171-a352-6783bf55384f
+        deleted_by:
+          type: string
+
+    QuotationItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 93c06d43-caaa-4171-a352-6783bf55384f
+        quotation_id:
+          type: string
+          example: 93c06d43-caaa-4171-a352-6783bf55384f
+        product_id:
+          type: string
+          example: 93c06d43-caaa-4171-a352-6783bf55384f
+        quantity:
+          type: integer
+          example: 100
+        unit_price:
+          type: integer
+          example: 12000
+        sub_total:
+          type: integer
+          example: 1200000
+        created_at:
+          type: string
+          example:  "2025-07-16T04:23:33.826Z"
+        updated_at:
+          type: string
+          example:  "2025-07-16T04:23:33.826Z"
+        deleted_at:
+          type: string
+        
+    
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 10
+        total_page:
+          type: integer
+          example: 1
+        total_data:
+          type: integer
+          example: 1
 
     BaseErrorResponse:
       type: object
