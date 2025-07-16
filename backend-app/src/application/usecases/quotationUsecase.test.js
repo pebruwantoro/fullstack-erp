@@ -127,4 +127,43 @@ describe('ProductUsecase', () => {
             );
         })
     })
+
+    describe('getListQuotations', () => {
+        const filterRequest = {
+            status: QuotationStatus.PENDING,
+            createdAt: '2025-10-10',
+            page: 1,
+            limit: 10,
+        };
+
+        const quotations = [
+            new Quotation('id1', 'id', QuotationStatus.PENDING, 40000),
+            new Quotation('id2', 'id', QuotationStatus.PENDING, 40000)
+        ];
+        
+        const quotationItems = [
+            new QuotationItem('id', 'id1', 'id', 2, 10000, 20000),
+            new QuotationItem('id', 'id1', 'id', 2, 10000, 20000),
+            new QuotationItem('id', 'id2', 'id', 2, 10000, 20000),
+            new QuotationItem('id', 'id2', 'id', 2, 10000, 20000)
+        ];
+        const total = 2;
+
+        it('success get data', async () => {
+            mockQuotationRepository.count.mockResolvedValue(total);
+            mockQuotationRepository.findAll.mockResolvedValue(quotations);
+            mockQuotationItemRepository.findByQuotationIds.mockResolvedValue(quotationItems);
+
+            const result = await quotationUsecase.getListQuotations(filterRequest);
+
+            expect(mockQuotationRepository.count).toHaveBeenCalledWith(filterRequest);
+            expect(mockQuotationRepository.findAll).toHaveBeenCalledWith(filterRequest);
+            expect(mockQuotationItemRepository.findByQuotationIds).toHaveBeenCalledWith(['id1', 'id2']);
+            expect(result.list.length).toBe(quotations.length);
+            expect(result.pagination.page).toBe(filterRequest.page);
+            expect(result.pagination.per_page).toBe(filterRequest.limit);
+            expect(result.pagination.total_page).toBe(Math.ceil(total/filterRequest.limit));
+            expect(result.pagination.total_data).toBe(total);
+        })
+    })
 });

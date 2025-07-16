@@ -20,7 +20,7 @@ export default (sequelize) => {
             allowNull: false,
         },
         price: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         stock: {
