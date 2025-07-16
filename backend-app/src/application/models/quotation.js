@@ -21,7 +21,7 @@ export default (sequelize) => {
             allowNull: false,
         },
         totalAmount: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
             field: 'total_amount',
         },

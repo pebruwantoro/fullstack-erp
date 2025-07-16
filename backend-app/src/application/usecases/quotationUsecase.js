@@ -69,4 +69,41 @@ export default class QuotationUsecase {
 
         return updatedQuotation
     }
+
+    async getListQuotations(filterGetQuotation) {
+        const total = await this.quotationRepository.count(filterGetQuotation);
+       
+        const listData = await this.quotationRepository.findAll(filterGetQuotation);
+        
+        let ids = listData.map(data => data.id);
+        
+        const items = await this.quotationItemRepository.findByQuotationIds(ids);
+        
+        const groupedItems = new Map();
+        items.forEach(item => {
+            if (!groupedItems.has(item.quotation_id)) {
+                groupedItems.set(item.quotation_id, []);
+            }
+            groupedItems.get(item.quotation_id).push(item);
+        });
+        
+        const list = listData.map(quotation => {
+            const associatedItems = groupedItems.get(quotation.id) || [];
+            return {
+                ...quotation,
+                items: associatedItems,
+            };
+        });
+
+        
+        return {
+            list: list,
+            pagination: {
+                page: filterGetQuotation.page,
+                per_page: filterGetQuotation.limit,
+                total_page: Math.ceil(total/filterGetQuotation.limit),
+                total_data: total,
+            },
+        }
+    }
 }

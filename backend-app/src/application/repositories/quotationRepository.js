@@ -1,13 +1,25 @@
 import { Quotation } from '../models/quotation.js';
 import { Quotation as QuotationModel } from '../../database.js';
+import { Op } from 'sequelize'; 
 
 const _mapToEntity = (QuotationModelInstance) => {
     if (!QuotationModelInstance) {
         return null;
     }
     
-    const { id, customerId, status, totalAmount, created_at, updated_at, deleted_at, createdBy, updatedBy, deletedBy } = QuotationModelInstance;
-    return new Quotation(id, customerId, status, totalAmount, created_at, updated_at, deleted_at, createdBy, updatedBy, deletedBy);
+    const { id, customerId, status, totalAmount, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy } = QuotationModelInstance;
+    return {
+        id,
+        customer_id: customerId,
+        status,
+        total_amount: totalAmount,
+        created_at: createdAt,
+        updated_at: updatedAt,
+        deleted_at: deletedAt,
+        created_by: createdBy,
+        updated_by: updatedBy,
+        deleted_by: deletedBy,
+    }
 };
 
 export default class QuotationRepository {
@@ -55,5 +67,79 @@ export default class QuotationRepository {
             deleted_at: null,
         } })
         return _mapToEntity(quotation);
+    }
+
+    async findAll(filter){
+        let whereClause = {
+            deleted_at: null,
+        };
+        let orderClause = ['created_at', 'DESC'];
+
+        if (filter.status){
+            whereClause = {
+                status: filter.status,
+                deleted_at: null,
+            }
+            orderClause = ['status', 'DESC'];
+        } else if (filter.createdAt) {
+            const filterDate = new Date(filter.createdAt);
+            const startOfDay = new Date(filterDate);
+            startOfDay.setHours(0, 0, 0, 0);
+            const endOfDay = new Date(filterDate);
+            endOfDay.setDate(endOfDay.getDate() + 1);
+            endOfDay.setHours(0, 0, 0, 0);
+
+            whereClause.created_at = {
+                [Op.gte]: startOfDay,
+                [Op.lt]: endOfDay
+            }
+            orderClause = ['created_at', 'DESC'];
+        }
+
+        const offset = (filter.page - 1) * filter.limit;
+
+        const quotations = await QuotationModel.findAll({ 
+            where: whereClause,
+            order: [orderClause],
+            limit: filter.limit,
+            offset: offset,
+        });
+
+        return quotations.map(_mapToEntity);
+    }
+
+    async count(filter){
+        let whereClause = {
+            deleted_at: null,
+        };
+        let orderClause = ['created_at', 'DESC'];
+
+        if (filter.status){
+            whereClause = {
+                status: filter.status,
+                deleted_at: null,
+            }
+            orderClause = ['status', 'DESC'];
+        } else if (filter.createdAt) {
+            const filterDate = new Date(filter.createdAt);
+            const startOfDay = new Date(filterDate);
+            startOfDay.setHours(0, 0, 0, 0);
+            const endOfDay = new Date(filterDate);
+            endOfDay.setDate(endOfDay.getDate() + 1);
+            endOfDay.setHours(0, 0, 0, 0);
+
+            whereClause.created_at = {
+                [Op.gte]: startOfDay,
+                [Op.lt]: endOfDay
+            }
+            orderClause = ['created_at', 'DESC'];
+        }
+
+        const totalCount = await QuotationModel.count({ 
+            where: whereClause,
+            order: [orderClause],
+        });
+
+        return totalCount;
     }
 }
