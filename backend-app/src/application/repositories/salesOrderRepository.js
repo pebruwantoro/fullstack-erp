@@ -12,7 +12,7 @@ const _mapToEntity = (SalesOrderModelInstance) => {
         quotation_id: quotationId,
         customer_id: customerId,
         status, 
-        totalAmount, 
+        total_amount: totalAmount, 
         created_at, 
         updated_at, 
         deleted_at
@@ -37,5 +37,49 @@ export default class SalesOrderRepository {
         });
 
         return newData.map(_mapToEntity);
+    }
+
+    async findAll(filter){
+        let whereClause = {
+            deleted_at: null,
+        };
+        let orderClause = ['created_at', 'DESC'];
+
+        if(filter.quotationId){
+            whereClause.quotation_id = filter.quotationId;
+        }
+
+        let filterQuery = {
+            where: whereClause,
+            order: [orderClause]
+        };
+
+        if (filter.limit && filter.page) {
+            filterQuery.limit = filter.limit;
+            filterQuery.offset = (filter.page - 1) * filter.limit;
+        }
+
+        const quotationItems = await SalesOrderModel.findAll(filterQuery)
+        return quotationItems.map(_mapToEntity);
+    }
+
+    async count(filter){
+        let whereClause = {
+            deleted_at: null,
+        };
+        let orderClause = ['created_at', 'DESC'];
+
+        if(filter.quotationId){
+            whereClause.quotation_id = filter.quotationId;
+        }
+
+        let filterQuery = {
+            where: whereClause,
+            order: [orderClause]
+        };
+
+        const totalCount = await SalesOrderModel.count(filterQuery);
+
+        return totalCount;
     }
 }

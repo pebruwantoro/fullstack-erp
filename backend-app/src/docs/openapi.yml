@@ -288,6 +288,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/BaseErrorResponse'
 
+    get:
+      tags:
+        - Sales Orders
+      summary: Get list of sales orders
+      description: Retrieves a list of sales orders, optionally filtered by quotation ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: quotationId
+          in: query
+          required: false
+          description: ID of the quotation to filter sales orders by
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetListSalesOrdersResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
 components:
   schemas:
     RegisterUserRequest:
@@ -475,6 +503,26 @@ components:
         message:
           type: string
           example: success create sales orders
+
+    GetListSalesOrdersResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: success get sales orders
+        data:
+          type: object
+          properties:
+            list:
+              type: array
+              items:
+                $ref: '#/components/schemas/SalesOrder'
+            pagination:
+              type: object
+              $ref: '#/components/schemas/Pagination'
     
     Product:
       type: object
@@ -582,7 +630,41 @@ components:
           example:  "2025-07-16T04:23:33.826Z"
         deleted_at:
           type: string
-        
+
+    SalesOrder:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 945799d0-720d-4118-8a2d-90262959086c
+        quotation_id:
+          type: string
+          format: uuid
+          example: 091b3dc3-9914-49b3-9074-7f71320a2972
+        customer_id:
+          type: string
+          format: uuid
+          example: 2832c8d7-8610-4719-b84a-efb77c9c4ac5
+        status:
+          type: string
+          example: invoiced
+        total_amount:
+          type: integer
+          example: 3250000
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-07-16T11:09:56.928Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-07-16T11:09:56.928Z
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null    
     
     Pagination:
       type: object

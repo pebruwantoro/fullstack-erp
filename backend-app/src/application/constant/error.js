@@ -9,5 +9,6 @@ export const ErrorConstant = {
     ErrorProductNull: 'Product can not null',
     ErrorProductPayloadInvalid: 'Product payload invalid',
     ErrorQuotationNotFound: 'Quotation not found',
-    ErrorQuotationAlreadyApproved: 'Quotation already approved'
+    ErrorQuotationAlreadyApproved: 'Quotation already approved',
+    ErrorSalesOrderNotFound: 'Sales Order not found',
 };
