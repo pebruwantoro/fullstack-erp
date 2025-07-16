@@ -18,6 +18,8 @@ export default function Login() {
         
         if (response.status === 200) {
             setToken(responseBody.data.token);
+            setEmail('');
+            setPassword('');
         } else {
             await alertError(responseBody.message);
         }
