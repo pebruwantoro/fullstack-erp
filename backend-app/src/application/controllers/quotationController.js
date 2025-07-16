@@ -24,7 +24,7 @@ export default class QuotationController {
             };
 
             const result = await this.quotationUsecase.createQuotation(quotationRequest)
-            res.status(200).json({
+            res.status(201).json({
                 success: true,
                 message: "success create quotation",
                 data: result.id,
