@@ -15,6 +15,10 @@ servers:
 tags:
   - name: Users
     description: Operations related to users
+  - name: Products
+    description: Operations related to products
+  - name: Quotations
+    description: Operations related to quotations
 
 paths:
   /v1/api/users/register:
@@ -109,6 +113,99 @@ paths:
               schema:
                 $ref: '#/components/schemas/BaseErrorResponse'
 
+  /v1/api/products:
+    get:
+      tags:
+        - Products
+      summary: Get List Product
+      description: Get list product.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetListResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
+  /v1/api/products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get Detail Product
+      description: Get detail product.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Product id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDetailProductResponse'
+        '404':
+          description: Not found error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
+  /v1/api/quotations:
+    post:
+      tags:
+        - Quotations
+      summary: Create new quotation
+      description: Creating a new quotation.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQuotationRequest'
+      responses:
+        '201':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateQuotationResponse'
+        '400':
+          description: Bad request error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
+
 components:
   schemas:
     RegisterUserRequest:
@@ -150,6 +247,17 @@ components:
       required:
         - email
         - password
+
+    CreateQuotationRequest:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductQuotation'
+          
+      required:
+        - products
 
     RegisterUserResponse:
       type: object
@@ -205,6 +313,86 @@ components:
               type: string
               example: customer
 
+    GetListResponse:
+      properties:
+        success:
+          type: boolean
+          example: true
+        message: 
+          type: string
+          example: success get data
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+
+    GetDetailProductResponse:
+      properties:
+        success:
+          type: boolean
+          example: true
+        message: 
+          type: string
+          example: success get data
+        data:
+          type: object
+          $ref: '#/components/schemas/Product'
+
+    CreateQuotationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message: 
+          type: string
+          example: success create data
+        data:
+          type: string
+          example: 93c06d43-caaa-4171-a352-6783bf55384f
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 026b47e8-cc12-4c1a-bc84-c6b72c3fd075
+        name:
+          type: string
+          example: paper
+        description:
+          type: string
+          example: good paper quality
+        sku:
+          type: string
+          example: LPX-110
+        price:
+          type: integer
+          example: 1200000
+        stock:
+          type: integer
+          example: 100
+        created_at:
+          type: string
+          example: 2025-07-16T01:49:51.362Z
+        updated_at:
+          type: string
+          example: 2025-07-16T01:49:51.362Z
+
+    ProductQuotation:
+      type: object
+      properties:
+        id: 
+          type: string
+          format: uuid
+          example: 7e8597d3-7077-4d33-af82-3563810afdde
+        quantity:
+          type: integer
+          example: 5
+        price:
+          type: integer
+          example: 10000
+
     BaseErrorResponse:
       type: object
       properties:
@@ -214,3 +402,9 @@ components:
         message: 
           type: string
           example: error
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
