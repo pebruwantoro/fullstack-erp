@@ -205,6 +205,42 @@ paths:
               schema:
                 $ref: '#/components/schemas/BaseErrorResponse'
 
+  /v1/api/quotations/{id}/approve:
+    post:
+      tags:
+        - Quotations
+      summary: Create new quotation
+      description: Creating a new quotation.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Product id
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApproveQuotationResponse'
+        '400':
+          description: Bad request error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
 
 components:
   schemas:
@@ -347,6 +383,19 @@ components:
         message: 
           type: string
           example: success create data
+        data:
+          type: string
+          example: 93c06d43-caaa-4171-a352-6783bf55384f
+
+    ApproveQuotationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message: 
+          type: string
+          example: success approved quotation
         data:
           type: string
           example: 93c06d43-caaa-4171-a352-6783bf55384f
