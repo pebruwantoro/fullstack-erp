@@ -16,14 +16,17 @@ import SalesOrderRepository from './application/repositories/salesOrderRepositor
 import UserUsecase from './application/usecases/userUsecase.js';
 import ProductUsecase from './application/usecases/productUsecase.js';
 import QuotationUsecase from './application/usecases/quotationUsecase.js';
+import SalesOrderUsecase from './application/usecases/salesOrderUsecase.js';
 
 import UserController from './application/controllers/userController.js';
 import ProductController from './application/controllers/productController.js';
 import QuotationController from './application/controllers/quotationController.js';
+import SalesOrderController from './application/controllers/salesOrderController.js';
 
 import userRoute from './application/routes/userRoute.js';
 import productRoute from './application/routes/productRoute.js';
 import quotationRoute from './application/routes/quotationRoute.js';
+import salesOrderRoute from './application/routes/salesOrderRoute.js';
 
 import redisClient from './application/redis/redis.js';
 
@@ -43,20 +46,24 @@ const salesOrderRepository = new SalesOrderRepository();
 const userUsecase = new UserUsecase(userRepository, customerRepository);
 const productUsecase = new ProductUsecase(productRepository, redisClient);
 const quotationUsecase = new QuotationUsecase(quotationRepository, quotationItemRepository, productRepository);
+const salesOrderUsecase = new SalesOrderUsecase(salesOrderRepository, quotationRepository);
 
 // CONTROLLERS
 const userController = new UserController(userUsecase);
 const productController = new ProductController(productUsecase);
 const quotationController = new QuotationController(quotationUsecase);
+const salesOrderController = new SalesOrderController(salesOrderUsecase);
 
 // ROUTES
 const userRouter = userRoute(userController);
 const productRouter = productRoute(productController);
 const quotationRouter = quotationRoute(quotationController);
+const salesOrderRouter = salesOrderRoute(salesOrderController);
 
 app.use('/v1/api/users', userRouter)
 app.use('/v1/api/products', productRouter)
 app.use('/v1/api/quotations', quotationRouter)
+app.use('/v1/api/sales-orders', salesOrderRouter)
 
 // SWAGGER DOCS API
 const __filename = fileURLToPath(import.meta.url);
