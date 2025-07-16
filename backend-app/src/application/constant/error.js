@@ -8,4 +8,6 @@ export const ErrorConstant = {
     ErrorProductNotFound: 'Product data not found',
     ErrorProductNull: 'Product can not null',
     ErrorProductPayloadInvalid: 'Product payload invalid',
+    ErrorQuotationNotFound: 'Quotation not found',
+    ErrorQuotationAlreadyApproved: 'Quotation already approved'
 };

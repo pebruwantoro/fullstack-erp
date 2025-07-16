@@ -43,7 +43,7 @@ const salesOrderRepository = new SalesOrderRepository();
 // USE-CASES
 const userUsecase = new UserUsecase(userRepository, customerRepository);
 const productUsecase = new ProductUsecase(productRepository, redisClient);
-const quotationUsecase = new QuotationUsecase(quotationRepository, quotationItemRepository, productRepository, salesOrderRepository);
+const quotationUsecase = new QuotationUsecase(quotationRepository, quotationItemRepository, productRepository);
 
 // CONTROLLERS
 const userController = new UserController(userUsecase);

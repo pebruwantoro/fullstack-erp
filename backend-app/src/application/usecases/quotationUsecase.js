@@ -4,11 +4,10 @@ import { QuotationItem } from '../models/quotationItem.js';
 
 
 export default class QuotationUsecase {
-    constructor(quotationRepository, quotationItemRepository, productRepository, salesOrderRepository) {
+    constructor(quotationRepository, quotationItemRepository, productRepository) {
         this.quotationRepository = quotationRepository;
         this.quotationItemRepository = quotationItemRepository;
         this.productRepository = productRepository;
-        this.salesOrderRepository = salesOrderRepository;
     }
 
     async createQuotation(quotationRequest) {
@@ -52,5 +51,22 @@ export default class QuotationUsecase {
         await this.productRepository.updateMany(ids, updatedProduct)
 
         return quotation;
+    }
+
+    async approveQuotation({ id, updatedBy }) {
+        const getQuotation = await this.quotationRepository.findById(id);
+        if (!getQuotation) {
+            throw new Error(ErrorConstant.ErrorQuotationNotFound)
+        }
+        
+        if (getQuotation.status == QuotationStatus.APPROVED) {
+            throw new Error(ErrorConstant.ErrorQuotationAlreadyApproved)
+        }
+
+        getQuotation.status = QuotationStatus.APPROVED
+        
+        const updatedQuotation = await this.quotationRepository.update(id, getQuotation, updatedBy)
+
+        return updatedQuotation
     }
 }
