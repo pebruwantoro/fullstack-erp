@@ -96,14 +96,17 @@ export default class QuotationRepository {
             orderClause = ['created_at', 'DESC'];
         }
 
-        const offset = (filter.page - 1) * filter.limit;
-
-        const quotations = await QuotationModel.findAll({ 
+        let filterQuery = {
             where: whereClause,
-            order: [orderClause],
-            limit: filter.limit,
-            offset: offset,
-        });
+            order: [orderClause]
+        };
+
+        if (filter.limit && filter.page) {
+            filterQuery.limit = filter.limit;
+            filterQuery.offset = (filter.page - 1) * filter.limit;
+        }
+
+        const quotations = await QuotationModel.findAll(filterQuery);
 
         return quotations.map(_mapToEntity);
     }
@@ -141,5 +144,32 @@ export default class QuotationRepository {
         });
 
         return totalCount;
+    }
+
+    async updateMany(ids, updates) {
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return { count: 0 };
+        }
+
+        const updatePayload = updates.map(item => ({
+            id: item.id,
+            status: item.status,
+            updated_at: new Date(),
+        }));
+
+        for (const updated of updatePayload) {
+            await QuotationModel.update(
+                {
+                    status: updated.status
+                },
+                {
+                    where: {
+                        id: updated.id
+                    }
+                }
+            )
+        }
+
+        return updates.map(_mapToEntity);
     }
 }

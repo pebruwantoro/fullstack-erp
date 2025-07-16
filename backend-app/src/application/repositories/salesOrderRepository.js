@@ -6,64 +6,36 @@ const _mapToEntity = (SalesOrderModelInstance) => {
         return null;
     }
     
-    const { id, quotationId, customerId, quantity, status, totalAmount, created_at, updated_at, deleted_at, createdBy, updatedBy, deletedBy } = SalesOrderModelInstance;
-    return new SalesOrder(id, quotationId, customerId, quantity, status, totalAmount, created_at, updated_at, deleted_at, createdBy, updatedBy, deletedBy);
+    const { id, quotationId, customerId, status, totalAmount, created_at, updated_at, deleted_at } = SalesOrderModelInstance;
+    return {
+        id, 
+        quotation_id: quotationId,
+        customer_id: customerId,
+        status, 
+        totalAmount, 
+        created_at, 
+        updated_at, 
+        deleted_at
+    };
 };
 
 export default class SalesOrderRepository {
-    async create(SalesOrderEntity) {
-        const { quotationId, customerId, quantity, status, totalAmount, createdBy } = SalesOrderEntity;
+    async createMany(salesOrder, transaction = null) {
+        if (!Array.isArray(salesOrder) || salesOrder.length === 0) {
+            return [];
+        }
+        
+        const itemsToCreate = salesOrder.map(entity => ({
+            quotationId: entity.quotationId,
+            customerId: entity.customerId,
+            status: entity.status,
+            totalAmount: entity.totalAmount,
+        }));
 
-        const newSalesOrder = await SalesOrderModel.create({
-            quotationId,
-            customerId,
-            quantity,
-            status,
-            totalAmount,
-            createdBy,
+        const newData = await SalesOrderModel.bulkCreate(itemsToCreate, {
+            transaction: transaction,
         });
 
-        return _mapToEntity(newSalesOrder);
-    }
-
-    async update(id, updates, updatedBy) {
-        const salesOrder = await SalesOrderModel.findByPk(id);
-
-        if (!salesOrder) {
-            return null;
-        }
-
-        const updatedData = {
-            ...updates,
-            updatedBy: updatedBy,
-        };
-
-        await salesOrder.update(updatedData);
-
-        return _mapToEntity(salesOrder);
-    }
-
-    async findByQuotationId(quotationId){
-        const salesOrders = await SalesOrderModel.findAll({ where: { 
-            quotation_id: quotationId,
-            deleted_at: null,
-        } })
-        return salesOrders.map(_mapToEntity);
-    }
-
-    async findByCustomerId(customerId){
-        const salesOrders = await SalesOrderModel.findAll({ where: { 
-            customer_id: customerId,
-            deleted_at: null,
-        } })
-        return salesOrders.map(_mapToEntity);
-    }
-
-    async findById(id){
-        const salesOrder = await SalesOrderModel.findOne({ where: { 
-            id: id,
-            deleted_at: null,
-        } })
-        return _mapToEntity(salesOrder);
+        return newData.map(_mapToEntity);
     }
 }

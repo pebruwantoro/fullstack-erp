@@ -72,5 +72,6 @@ export class Quotation {
 export const QuotationStatus = {
     PENDING: 'pending',
     APPROVED: 'approved',
+    PROCESSED: 'processed',
     REJECTED: 'rejected',
 };

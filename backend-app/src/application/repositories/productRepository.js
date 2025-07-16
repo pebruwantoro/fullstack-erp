@@ -49,6 +49,7 @@ export default class ProductRepository {
 
         return updates.map(_mapToEntity);
     }
+    
     async findAll() {
         const products = await ProductModel.findAll();
         return products.map(_mapToEntity);
