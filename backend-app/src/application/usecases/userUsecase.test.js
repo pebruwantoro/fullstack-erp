@@ -1,20 +1,25 @@
 import { jest } from '@jest/globals';
 import UserUsecase from './userUsecase.js';
 import { User, UserRole } from '../models/user.js';
+import { Customer } from '../models/customer.js';
 import { ErrorConstant } from '../constant/error.js';
 import bcrypt from 'bcryptjs';
 import { sequelize } from '../../database.js';
 import UserRepository from '../repositories/userRepository.js';
+import CustomerRepository from '../repositories/customerRepository.js';
 
 jest.mock('../repositories/userRepository.js');
+jest.mock('../repositories/customerRepository.js');
 
 describe('UserUsecase', () => {
   let userUsecase;
   let mockUserRepository;
+  let mockCustomerRepository;
 
   beforeEach(() => {
     mockUserRepository = new UserRepository();
-    userUsecase = new UserUsecase(mockUserRepository);
+    mockCustomerRepository = new CustomerRepository();
+    userUsecase = new UserUsecase(mockUserRepository, mockCustomerRepository);
   });
 
   afterAll(async () => {
@@ -36,11 +41,15 @@ describe('UserUsecase', () => {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return new User(1, user.name, user.email, hashedPassword, user.role, new Date(), new Date(), null, user.createdBy, null, null);
       });
+      mockCustomerRepository.create.mockImplementation(async (user) => {
+        return new Customer(null, user.id, new Date(), new Date(), null);
+      });
 
       const newUser = await userUsecase.createUser(userData);
 
       expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(userData.email);
       expect(mockUserRepository.create).toHaveBeenCalled();
+      expect(mockCustomerRepository.create).toHaveBeenCalled();
       expect(newUser).toBeInstanceOf(User);
       expect(newUser.email).toBe(userData.email);
     });
@@ -84,10 +93,12 @@ describe('UserUsecase', () => {
       };
 
       mockUserRepository.findByEmail.mockResolvedValue(new User(1, 'Existing User', 'test@example.com', '$2a$10$J8qh.eurZGQDk8o8EafJpOYlOvLGOSz7osjcIoiZ3I5rRyvFe0dpC', UserRole.CUSTOMER, new Date(), new Date(), null, 'admin', null, null));
-
+      mockCustomerRepository.findByUserId.mockResolvedValue(new Customer(1, 1))
+      
       const result = await userUsecase.loginUser(userData);
 
       expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(userData.email);
+      expect(mockCustomerRepository.findByUserId).toHaveBeenCalledWith(1);
       expect(result.token).not.toBe('');
       expect(result.token).not.toBe(NaN);
       expect(result.token).not.toBe(undefined);
@@ -125,7 +136,8 @@ describe('UserUsecase', () => {
       const id = 'user-id-1'
 
       mockUserRepository.findById.mockResolvedValue(new User('user-id-1', 'Existing User', 'test@example.com', '$2a$10$J8qh.eurZGQDk8o8EafJpOYlOvLGOSz7osjcIoiZ3I5rRyvFe0dpC', UserRole.CUSTOMER, new Date(), new Date(), null, 'admin', null, null));
-
+      mockCustomerRepository.findByUserId.mockResolvedValue(new Customer('user-id-1', 1))
+      
       const result = await userUsecase.getUserById(id);
       
       expect(result.id).toBe(id);
