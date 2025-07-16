@@ -34,4 +34,20 @@ export default class SalesOrderUsecase {
         
         return newSalesOrder;
     }
+
+    async getSalesOrders(filter) {
+        const total = await this.salesOrderRepository.count(filter);
+       
+        const list = await this.salesOrderRepository.findAll(filter);
+        
+        return {
+            list: list,
+            pagination: {
+                page: filter.page,
+                per_page: filter.limit,
+                total_page: Math.ceil(total/filter.limit),
+                total_data: total,
+            },
+        }
+    }
 }

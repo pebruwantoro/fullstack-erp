@@ -71,4 +71,50 @@ describe('SalesOrderUsecase', () => {
             expect(result).toBeUndefined();
         });
     });
+
+    describe('getSalesOrders', () => {
+        it('should return a paginated list of sales orders', async () => {
+            const filter = { page: 1, limit: 10 };
+            const mockSalesOrdersList = [
+                new SalesOrder('so-id-1', 'q-id-1', 'cust-1', SalesOrderStatus.INVOICED, 150000),
+                new SalesOrder('so-id-2', 'q-id-2', 'cust-2', SalesOrderStatus.INVOICED, 250000)
+            ];
+            const totalCount = 2;
+
+            mockSalesOrderRepository.count.mockResolvedValue(totalCount);
+            mockSalesOrderRepository.findAll.mockResolvedValue(mockSalesOrdersList);
+
+            const result = await salesOrderUsecase.getSalesOrders(filter);
+
+            expect(mockSalesOrderRepository.count).toHaveBeenCalledWith(filter);
+            expect(mockSalesOrderRepository.findAll).toHaveBeenCalledWith(filter);
+
+            expect(result.list).toEqual(mockSalesOrdersList);
+            expect(result.list.length).toBe(2);
+            expect(result.pagination).toBeDefined();
+            expect(result.pagination.page).toBe(filter.page);
+            expect(result.pagination.per_page).toBe(filter.limit);
+            expect(result.pagination.total_data).toBe(totalCount);
+            expect(result.pagination.total_page).toBe(1);
+        });
+
+        it('should return an empty list and correct pagination when no data is found', async () => {
+            const filter = { page: 1, limit: 10 };
+            const totalCount = 0;
+
+            mockSalesOrderRepository.count.mockResolvedValue(totalCount);
+            mockSalesOrderRepository.findAll.mockResolvedValue([]);
+
+            const result = await salesOrderUsecase.getSalesOrders(filter);
+
+            expect(mockSalesOrderRepository.count).toHaveBeenCalledWith(filter);
+            expect(mockSalesOrderRepository.findAll).toHaveBeenCalledWith(filter);
+
+            expect(result.list).toEqual([]);
+            expect(result.list.length).toBe(0);
+            expect(result.pagination.page).toBe(filter.page);
+            expect(result.pagination.total_data).toBe(0);
+            expect(result.pagination.total_page).toBe(0);
+        });
+    });
 });
