@@ -50,7 +50,6 @@ export default class QuotationItemRepository {
 
     async update(id, updates, updatedBy) {
         const quotationItem = await QuotationItemModel.findByPk(id);
-
         if (!quotationItem) {
             return null;
         }

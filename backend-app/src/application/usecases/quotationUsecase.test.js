@@ -13,21 +13,18 @@ import { QuotationItem } from '../models/quotationItem.js';
 jest.mock('../repositories/quotationRepository.js');
 jest.mock('../repositories/quotationItemRepository.js');
 jest.mock('../repositories/productRepository.js');
-jest.mock('../repositories/salesOrderRepository.js');
 
 describe('ProductUsecase', () => {
     let mockQuotationRepository;
     let mockQuotationItemRepository;
     let mockProductRepository;
-    let mockSalesOrderRepository;
     let quotationUsecase;
 
     beforeEach(() => {
         mockQuotationRepository = new QuotationRepository();
         mockQuotationItemRepository = new QuotationItemRepository();
         mockProductRepository = new ProductRepository();
-        mockSalesOrderRepository = new SalesOrderRepository();
-        quotationUsecase = new QuotationUsecase(mockQuotationRepository, mockQuotationItemRepository, mockProductRepository, mockSalesOrderRepository);
+        quotationUsecase = new QuotationUsecase(mockQuotationRepository, mockQuotationItemRepository, mockProductRepository);
     });
 
     afterAll(async () => {
@@ -91,6 +88,42 @@ describe('ProductUsecase', () => {
         it('error request empty', async () => {
             await expect(quotationUsecase.createQuotation(requestEmpty)).rejects.toThrow(
                 ErrorConstant.ErrorProductNull
+            );
+        })
+    })
+
+    describe('approveQuotation', () => {
+        const quotationId = 'id1';
+        const salesId = 'id2'
+        const quotationNotApprove = new Quotation('id1', 'user1', QuotationStatus.PENDING, 60000, null, null, null, 'user1');
+        const quotationAlreadyApproved = new Quotation('id1', 'user1', QuotationStatus.APPROVED, 60000, null, null, null, 'user1');
+    
+        it('success approve quotation', async () => {
+            mockQuotationRepository.findById.mockResolvedValue(quotationNotApprove);
+
+            mockQuotationRepository.update.mockResolvedValue(quotationNotApprove);
+        
+            const updatedQuotation = await quotationUsecase.approveQuotation({id: quotationId, updateBy: salesId})
+            
+            expect(mockQuotationRepository.findById).toHaveBeenCalledWith(quotationId);
+            expect(mockQuotationRepository.update).toHaveBeenCalled();
+            expect(updatedQuotation).toBeInstanceOf(Quotation);
+            expect(quotationNotApprove).toBe(updatedQuotation);
+        })
+
+        it('error data not found', async () => {
+            mockQuotationRepository.findById.mockResolvedValue(null);
+
+            await expect(quotationUsecase.approveQuotation({id: quotationId, updateBy: salesId})).rejects.toThrow(
+                ErrorConstant.ErrorQuotationNotFound
+            );
+        })
+
+        it('error quotation already approved', async () => {
+            mockQuotationRepository.findById.mockResolvedValue(quotationAlreadyApproved);
+
+            await expect(quotationUsecase.approveQuotation({id: quotationId, updateBy: salesId})).rejects.toThrow(
+                ErrorConstant.ErrorQuotationAlreadyApproved
             );
         })
     })

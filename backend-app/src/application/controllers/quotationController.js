@@ -43,4 +43,29 @@ export default class QuotationController {
             }
         }
     }
+
+    async approveQuotation(req, res){
+        try {
+            const salesId = req.user.id;
+            const quotationId = req.params.id;
+            const result = await this.quotationUsecase.approveQuotation({ id: quotationId, updatedBy: salesId })
+            res.status(200).json({
+                success: true,
+                message: "success approved quotation",
+                data: result.id,
+            })
+        } catch (error){
+            if (error.message === ErrorConstant.ErrorQuotationNotFound) {
+                return res.status(404).json({
+                    success: false,
+                    message: error.message,
+                });
+            } else {
+                return res.status(500).json({
+                    success: false,
+                    message: error.message,
+                });
+            }
+        }
+    }
 }
