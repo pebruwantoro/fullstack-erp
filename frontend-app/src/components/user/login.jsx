@@ -1,9 +1,26 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { Login as apiLogin } from '../../api/user.js';
+import { alertError } from "../../lib/alert";
+import { useState } from 'react';
+import { useLocalStorage } from 'react-use';
 
 export default function Login() {
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [_, setToken] = useLocalStorage("token", "");
+
     async function handleSubmit(e) {
         e.preventDefault();
+
+        const response = await apiLogin({email, password});
+        const responseBody = await response.json();
+        
+        if (response.status === 200) {
+            setToken(responseBody.data.token);
+        } else {
+            await alertError(responseBody.message);
+        }
     }
 
     return <>
@@ -34,6 +51,7 @@ export default function Login() {
                     className="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     placeholder="Enter your email"
                     required
+                    value={email} onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
                 </div>
@@ -55,6 +73,7 @@ export default function Login() {
                     className="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     placeholder="Enter you password"
                     required
+                    value={password} onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 </div>
