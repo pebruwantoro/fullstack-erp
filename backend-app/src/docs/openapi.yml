@@ -206,11 +206,11 @@ paths:
                 $ref: '#/components/schemas/BaseErrorResponse'
 
   /v1/api/quotations/{id}/approve:
-    post:
+    put:
       tags:
         - Quotations
-      summary: Create new quotation
-      description: Creating a new quotation.
+      summary: Approve quotation
+      description: Approve quotation.
       security:
         - bearerAuth: []
       parameters:
