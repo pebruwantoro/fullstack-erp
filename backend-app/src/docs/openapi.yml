@@ -19,6 +19,8 @@ tags:
     description: Operations related to products
   - name: Quotations
     description: Operations related to quotations
+  - name: Sales Orders
+    description: Operations related to sales orders
 
 paths:
   /v1/api/users/register:
@@ -264,6 +266,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/BaseErrorResponse'
 
+  /v1/api/sales-orders:
+    post:
+      tags:
+        - Sales Orders
+      summary: Create sales orders from approved quotations
+      description: Automatically creates sales orders for all quotations with an 'approved' status.
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSalesOrdersResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
 
 components:
   schemas:
@@ -442,6 +465,16 @@ components:
             pagination:
               type: object
               $ref: '#/components/schemas/Pagination'
+
+    CreateSalesOrdersResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: success create sales orders
     
     Product:
       type: object

@@ -11,6 +11,7 @@ export default (sequelize) => {
             type: DataTypes.UUID,
             allowNull: false,
             field: 'quotation_id',
+            unique: true,
             references: {
                 model: 'quotations',
                 key: 'id'
