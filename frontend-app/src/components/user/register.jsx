@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { createAccount } from "../../api/user.js";
+import { CreateAccount } from "../../api/user.js";
 import { alertError, alertSuccess } from "../../lib/alert.js";
 
 export default function Register() {
@@ -12,7 +12,7 @@ export default function Register() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        const response = await createAccount({name, email, password, role});
+        const response = await CreateAccount({name, email, password, role});
         const responseBody = await response.json();
 
         if (response.status === 201) {

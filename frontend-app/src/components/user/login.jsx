@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Login as apiLogin } from '../../api/user.js';
 import { alertError } from "../../lib/alert";
 import { useState } from 'react';
@@ -9,6 +9,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [_, setToken] = useLocalStorage("token", "");
+    const navigate = useNavigate();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -20,6 +21,7 @@ export default function Login() {
             setToken(responseBody.data.token);
             setEmail('');
             setPassword('');
+            navigate('/dashboard');
         } else {
             await alertError(responseBody.message);
         }
