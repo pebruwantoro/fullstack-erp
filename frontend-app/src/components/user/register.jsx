@@ -1,9 +1,29 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { createAccount } from "../../api/user.js";
+import { alertError, alertSuccess } from "../../lib/alert.js";
 
 export default function Register() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [role, setRole] = useState('customer');
 
     async function handleSubmit(e) {
         e.preventDefault();
+
+        const response = await createAccount({name, email, password, role});
+        const responseBody = await response.json();
+
+        if (response.status === 201) {
+            await alertSuccess(responseBody.message)
+            setName('');
+            setEmail('');
+            setPassword('');
+            setRole('customer');
+        } else {
+            await alertError(responseBody.message)
+        }
     }
 
     return <>
@@ -35,7 +55,7 @@ export default function Register() {
                     className="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     placeholder="Enter your full name"
                     required
-                    
+                    value={name} onChange={(e) => setName(e.target.value)}
                     />
                 </div>
                 </div>
@@ -59,7 +79,7 @@ export default function Register() {
                     className="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     placeholder="Enter your email"
                     required
-                    
+                    value={email} onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
                 </div>
@@ -83,7 +103,7 @@ export default function Register() {
                     className="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     placeholder="Enter you password"
                     required
-                    
+                    value={password} onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 </div>
@@ -101,6 +121,8 @@ export default function Register() {
                         <select
                             id="role"
                             name="role"
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
                             className="w-full pl-10 pr-10 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none"
                             required
                         >
