@@ -1,6 +1,6 @@
 import { Product } from '../models/product.js';
 import { Product as ProductModel } from '../../database.js';
-import { Op, where } from 'sequelize'; 
+import { Op } from 'sequelize'; 
 
 const _mapToEntity = (ProductModelInstance) => {
     if (!ProductModelInstance) {
@@ -8,7 +8,17 @@ const _mapToEntity = (ProductModelInstance) => {
     }
     
     const { id, name, description, sku, price, stock, created_at, updated_at, deleted_at, } = ProductModelInstance;
-    return new Product(id, name, description, sku, price, stock, created_at, updated_at, deleted_at);
+    return {
+        id,
+        name,
+        description,
+        sku,
+        price,
+        stock,
+        created_at,
+        updated_at,
+        deleted_at,
+    };
 };
 
 export default class ProductRepository {

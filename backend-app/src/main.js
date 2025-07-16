@@ -6,7 +6,6 @@ import YAML from 'yaml';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-
 import UserRepository from './application/repositories/userRepository.js';
 import CustomerRepository from './application/repositories/customerRepository.js';
 import ProductRepository from './application/repositories/productRepository.js';

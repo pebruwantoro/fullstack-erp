@@ -30,12 +30,12 @@ export default (sequelize) => {
             allowNull: false,
         },
         unitPrice: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
             field: 'unit_price',
         },
         subTotal: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.INTEGER,
             allowNull: false,
             field: 'sub_total',
         },

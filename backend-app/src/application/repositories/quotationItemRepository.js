@@ -1,13 +1,24 @@
 import { QuotationItem } from '../models/quotationItem.js';
 import { QuotationItem as QuotationItemModel } from '../../database.js';
+import { Op } from 'sequelize'; 
 
 const _mapToEntity = (QuotationItemModelInstance) => {
     if (!QuotationItemModelInstance) {
         return null;
     }
     
-    const { id, quotationId, productId, quantity, unitPrice, subTotal, created_at, updated_at, deleted_at, createdBy, updatedBy, deletedBy } = QuotationItemModelInstance;
-    return new QuotationItem(id, quotationId, productId, quantity, unitPrice, subTotal, created_at, updated_at, deleted_at, createdBy, updatedBy, deletedBy);
+    const { id, quotationId, productId, quantity, unitPrice, subTotal, created_at, updated_at, deleted_at } = QuotationItemModelInstance;
+    return {
+        id,
+        quotation_id: quotationId,
+        product_id: productId,
+        quantity,
+        unit_price: unitPrice,
+        sub_total: subTotal,
+        created_at,
+        updated_at,
+        deleted_at,
+    }
 };
 
 export default class QuotationItemRepository {
@@ -72,11 +83,20 @@ export default class QuotationItemRepository {
         return quotationItems.map(_mapToEntity);
     }
 
-    async findById(id){
-        const quotationItem = await QuotationItemModel.findOne({ where: { 
-            id: id,
-            deleted_at: null,
-        } })
-        return _mapToEntity(quotationItem);
+     async findByQuotationIds(ids) {
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return [];
+        }
+        
+        const quotationItems = await QuotationItemModel.findAll({
+            where: {
+                quotation_id: {
+                    [Op.in]: ids,
+                },
+                deleted_at: null,
+            }
+        });
+
+        return quotationItems.map(_mapToEntity);
     }
 }
