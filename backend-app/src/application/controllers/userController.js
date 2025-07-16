@@ -7,7 +7,6 @@ export default class UserController {
 
     async createUser(req, res) {
         try {
-            console.log('masuk sini')
             const data = req.body;
             const user = await this.userUsecase.createUser(data);
             res.status(201).json({

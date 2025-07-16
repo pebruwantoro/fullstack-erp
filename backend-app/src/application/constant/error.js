@@ -4,4 +4,8 @@ export const ErrorConstant = {
     ErrorInvalidCredentials: 'Password or Email is incorrect',
     ErrorEmptyPayloadJWT: 'Payload to create token can not empty',
     ErrorUserNotFound: 'User not found',
+    ErrorCustomerDataNotFound: 'Customer data not found',
+    ErrorProductNotFound: 'Product data not found',
+    ErrorProductNull: 'Product can not null',
+    ErrorProductPayloadInvalid: 'Product payload invalid',
 };
