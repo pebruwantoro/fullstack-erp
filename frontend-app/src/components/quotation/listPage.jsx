@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "react-use";
-import { alertError } from "../../lib/alert";
+import { alertError, alertSuccess } from "../../lib/alert";
 import { List as quotationList } from "../../api/quotation.js";
 import { useNavigate, Link, Outlet, useOutlet } from "react-router-dom";
 import Pagination from "../pagination.jsx";
 import QuotationCard from "./quotationCard.jsx";
 import { UserRole, QuotationStatus } from "../../constant/constant.js";
+import { GenerateSalesOrders as generateSalesOrders } from "../../api/salesOrder.js";
 
 
 export default function QuotationListPage() {
@@ -59,6 +60,19 @@ export default function QuotationListPage() {
         setCurrentPage(1); 
     };
 
+    async function handleGenerateSalesOrder(e) {
+        e.preventDefault();
+
+        const response = await generateSalesOrders(token);
+        const responseBody = await response.json();
+        
+        if(response.status === 201) {
+            alertSuccess(responseBody.message)
+        } else {
+            alertError(response.message)
+        }
+    }
+
 
     return outlet ? <Outlet /> : (
         <div className="flex flex-col h-full">
@@ -72,6 +86,16 @@ export default function QuotationListPage() {
                         <i className="fas fa-plus mr-2" />
                         Create Quotation
                     </Link>
+                )}
+
+                { role === UserRole.SALES && (
+                    <button
+                    onClick={handleGenerateSalesOrder}
+                    className="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800"
+                    >
+                        <i className="fas fa-file-invoice mr-2" />
+                        Generate Sales Order
+                    </button>
                 )}
 
                 <div>
