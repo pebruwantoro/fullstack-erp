@@ -81,7 +81,9 @@ export default class QuotationRepository {
                 deleted_at: null,
             }
             orderClause = ['status', 'DESC'];
-        } else if (filter.createdAt) {
+        }
+
+        if (filter.createdAt) {
             const filterDate = new Date(filter.createdAt);
             const startOfDay = new Date(filterDate);
             startOfDay.setHours(0, 0, 0, 0);
@@ -100,7 +102,7 @@ export default class QuotationRepository {
             where: whereClause,
             order: [orderClause]
         };
-
+        
         if (filter.limit && filter.page) {
             filterQuery.limit = filter.limit;
             filterQuery.offset = (filter.page - 1) * filter.limit;
