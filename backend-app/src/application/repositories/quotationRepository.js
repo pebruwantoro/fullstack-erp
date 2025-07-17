@@ -7,15 +7,15 @@ const _mapToEntity = (QuotationModelInstance) => {
         return null;
     }
     
-    const { id, customerId, status, totalAmount, createdAt, updatedAt, deletedAt, createdBy, updatedBy, deletedBy } = QuotationModelInstance;
+    const { id, customerId, status, totalAmount, created_at, updated_at, deleted_at, createdBy, updatedBy, deletedBy } = QuotationModelInstance;
     return {
         id,
         customer_id: customerId,
         status,
         total_amount: totalAmount,
-        created_at: createdAt,
-        updated_at: updatedAt,
-        deleted_at: deletedAt,
+        created_at,
+        updated_at,
+        deleted_at,
         created_by: createdBy,
         updated_by: updatedBy,
         deleted_by: deletedBy,

@@ -99,10 +99,10 @@ export default class QuotationUsecase {
         return {
             list: list,
             pagination: {
-                page: filterGetQuotation.page,
-                per_page: filterGetQuotation.limit,
+                page: Number(filterGetQuotation.page),
+                per_page: Number(filterGetQuotation.limit),
                 total_page: Math.ceil(total/filterGetQuotation.limit),
-                total_data: total,
+                total_data: Number(total),
             },
         }
     }
