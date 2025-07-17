@@ -35,7 +35,7 @@ export default function FormCreateQuotation() {
             }
         }
         fetchProducts();
-    }, [token, navigate]);
+    }, [token, navigate, role]);
 
     const [orderItems, setOrderItems] = useState([]);
     const [currentItem, setCurrentItem] = useState({
@@ -102,6 +102,7 @@ export default function FormCreateQuotation() {
 
             setOrderItems([]);
             setCurrentItem({ productId: '', name: '', price: '', quantity: 0 });
+            navigate('/quotations'); 
         } else {
             alertError(response.message)
         }
