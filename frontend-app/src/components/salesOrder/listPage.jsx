@@ -47,9 +47,6 @@ export default function SalesOrderListPage() {
     }, [token, navigate, role, currentPage]);
 
 
-
-
-
     return (
         <div className="flex flex-col h-full">
             <div className="mb-6 flex justify-start items-end gap-4">
