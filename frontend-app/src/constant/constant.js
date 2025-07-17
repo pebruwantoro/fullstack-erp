@@ -9,3 +9,10 @@ export const QuotationStatus = {
     PROCESSED: 'processed',
     REJECTED: 'rejected',
 };
+
+export const SalesOrderStatus = {
+    INVOICED: 'invoiced',
+    SHIPPED: 'shipped',
+    COMPLETED: 'completed',
+    CANCELED: 'canceled'
+};
