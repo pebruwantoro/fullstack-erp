@@ -4,19 +4,7 @@ import { QuotationStatus, UserRole } from "../../constant/constant.js";
 import { ApprovedQuotation as approveQuotation} from "../../api/quotation.js";
 import { alertError, alertSuccess } from "../../lib/alert";
 import { useLocalStorage } from "react-use";
-
-const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-        case QuotationStatus.PENDING:
-            return 'text-red-500';
-        case QuotationStatus.APPROVED:
-            return 'text-green-500';
-        case QuotationStatus.PROCESSED:
-            return 'text-blue-500';
-        default:
-            return 'text-gray-400';
-    }
-};
+import { getStatusColor } from '../../util/helper.js';
 
 
 export default function QuotationCard({ quotation, onApprovalSuccess }) {
