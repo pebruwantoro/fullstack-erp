@@ -3,13 +3,12 @@ import { useLocalStorage } from "react-use";
 import { alertError } from "../../lib/alert";
 import { List as productList } from "../../api/product.js";
 import { Link, useNavigate } from "react-router";
+import { formatDollarCurrency } from "../../util/format.js";
 
 export default function ProductListPage() {
     const [token, _] = useLocalStorage("token");
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
-
-    const formatCurrency = (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 
     useEffect(() => {
         if (!token) {
@@ -44,7 +43,7 @@ export default function ProductListPage() {
                             <p className="text-gray-400 text-sm mb-4 h-10 line-clamp-2">{product.description}</p>
                             <div className="space-y-3 text-gray-300 ml-2">
                                 <p className="flex items-center"><i className="fas fa-barcode text-gray-500 w-6" /><span className="font-medium w-24">SKU:</span><span>{product.sku}</span></p>
-                                <p className="flex items-center"><i className="fas fa-dollar-sign text-gray-500 w-6" /><span className="font-medium w-24">Price:</span><span>{formatCurrency(product.price)}</span></p>
+                                <p className="flex items-center"><i className="fas fa-dollar-sign text-gray-500 w-6" /><span className="font-medium w-24">Price:</span><span>{formatDollarCurrency(product.price)}</span></p>
                                 <p className="flex items-center"><i className="fas fa-bucket text-gray-500 w-6" /><span className="font-medium w-24">Stock:</span><span>{product.stock}</span></p>
                             </div>
                         </Link>
