@@ -38,11 +38,11 @@ export default function QuotationListPage() {
         const response = await quotationList(token, params);
         const responseBody = await response.json();
         
-        if (response.ok) {
+        if (response.status === 200) {
             setQuotations(responseBody.data.list);
             setTotalPages(responseBody.data.pagination.total_page);
         } else {
-            alertError(responseBody.message || 'Failed to load quotations.');
+            alertError(responseBody.message);
         }
     }, [token, currentPage, filterDate, role]);
 
@@ -130,7 +130,7 @@ export default function QuotationListPage() {
                     ))
                 ) : (
                     <div className="col-span-3 text-center text-gray-400 py-10">
-                        No quotations found.
+                        No content to display.
                     </div>
                 )}
             </div>

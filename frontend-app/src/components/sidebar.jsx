@@ -1,9 +1,10 @@
 import { useLocalStorage } from "react-use";
 import { Link, useNavigate, useLocation } from "react-router";
+import { UserRole } from "../constant/constant";
 
 export default function Sidebar() {
     const [_, setToken] = useLocalStorage("token");
-    const [__, setRole] = useLocalStorage("role");
+    const [role, setRole] = useLocalStorage("role");
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -15,9 +16,12 @@ export default function Sidebar() {
 
     const menuItems = [
         { path: '/dashboard', icon: 'fa-box-open', label: 'Products' },
-        { path: '/sales-orders', icon: 'fa-shopping-cart', label: 'Sales Orders' },
         { path: '/quotations', icon: 'fa-file-invoice-dollar', label: 'Quotations' },
     ];
+    
+    if(role === UserRole.SALES) {
+        menuItems.push({ path: '/sales-orders', icon: 'fa-shopping-cart', label: 'Sales Orders' })
+    }
 
     return (
         <aside className="w-64 bg-gray-800 p-6 flex flex-col flex-shrink-0">
