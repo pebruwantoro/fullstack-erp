@@ -5,9 +5,11 @@ import { Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { formatDollarCurrency } from "../../util/format.js";
 import { CreateQuotation as createQuotation } from "../../api/quotation.js";
+import { UserRole } from "../../constant/constant.js";
 
 export default function FormCreateQuotation() {
     const [token, _] = useLocalStorage("token");
+    const [role, __] = useLocalStorage("role");
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
 
@@ -16,6 +18,12 @@ export default function FormCreateQuotation() {
             navigate('/login');
             return;
         }
+        if (role !== UserRole.CUSTOMER ) {
+            alertError('Can not access this page')
+            navigate('/dashboard');
+            return
+        }
+
         async function fetchProducts() {
             const response = await productList(token);
             const responseBody = await response.json();

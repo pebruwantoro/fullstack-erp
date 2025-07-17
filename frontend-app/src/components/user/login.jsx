@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Login as apiLogin } from '../../api/user.js';
+import { Login as apiLogin, MyProfile as userProfile } from '../../api/user.js';
 import { alertError } from "../../lib/alert";
 import { useState } from 'react';
 import { useLocalStorage } from 'react-use';
@@ -10,6 +10,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [_, setToken] = useLocalStorage("token", "");
     const navigate = useNavigate();
+    const [__, setRole] = useLocalStorage("role", "");
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -21,7 +22,19 @@ export default function Login() {
             setToken(responseBody.data.token);
             setEmail('');
             setPassword('');
+            await handleSetRole(responseBody.data.token);
             navigate('/dashboard');
+        } else {
+            await alertError(responseBody.message);
+        }
+    }
+
+    async function handleSetRole(tokenUser) {
+        const response = await userProfile(tokenUser)
+        const responseBody = await response.json();
+        
+        if (response.status === 200) {
+            setRole(responseBody.data.role);
         } else {
             await alertError(responseBody.message);
         }
