@@ -88,7 +88,7 @@ export default function QuotationListPage() {
                 { role === UserRole.CUSTOMER && (
                     <Link
                     to="/quotations/create"
-                    className="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800"
+                    className="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                         <i className="fas fa-plus mr-2" />
                         Create Quotation
@@ -106,14 +106,14 @@ export default function QuotationListPage() {
                 <div>
                     <div className="relative">
                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i className="fas fa-calendar-alt text-gray-500" />
+                            <i className="fas fa-calendar-alt text-gray-400 dark:text-slate-500" />
                         </div>
                         <input
                             type="date"
                             id="date-filter"
                             value={filterDate}
                             onChange={handleDateChange}
-                            className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                            className="bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
                         />
                     </div>
                 </div>
@@ -129,7 +129,7 @@ export default function QuotationListPage() {
                         />
                     ))
                 ) : (
-                    <div className="col-span-3 text-center text-gray-400 py-10">
+                    <div className="col-span-3 text-center text-gray-500 dark:text-slate-400 py-10">
                         No content to display.
                     </div>
                 )}

@@ -25,35 +25,45 @@ export default function QuotationCard({ quotation, onApprovalSuccess }) {
         }
     }
 
+    function DetailRow({ icon, label, value }) {
+        return (
+            <p className="flex items-center">
+            <i className={`fas ${icon} text-gray-400 dark:text-slate-500 w-6 text-center`} />
+            <span className="font-medium text-gray-500 dark:text-slate-400 w-20">{label}:</span>
+            <span className="text-gray-800 dark:text-slate-200 truncate">{value}</span>
+            </p>
+        );
+    }
+
     return (
-        <div className="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
+        <div className="bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg dark:shadow-slate-900/50 card-hover animate-fade-in flex flex-col">
             <div className="p-6">
                 <div className="flex items-center mb-3">
                     <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-3 shadow-md flex-shrink-0">
                         <i className="fas fa-file-invoice-dollar text-white" />
                     </div>
-                    <h2 className="text-lg font-semibold text-white truncate" title={quotation.id}>{quotation.id}</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate" title={quotation.id}>{quotation.id}</h2>
                 </div>
                 <p className={`text-sm mb-4 h-10 line-clamp-2 ${getStatusColor(quotation.status)}`}>
                     {quotation.status.toUpperCase()}
                 </p>
-                <div className="space-y-3 text-gray-300 ml-2">
-                    <p className="flex items-center">
-                        <i className="fas fa-dollar-sign text-gray-500 w-6" />
-                        <span className="font-medium w-24">Total:</span>
-                        <span>{formatDollarCurrency(quotation.total_amount)}</span>
-                    </p>
-                    <p className="flex items-center">
-                        <i className="fas fa-calendar-alt text-gray-500 w-6" />
-                        <span className="font-medium w-24">Created:</span>
-                        <span>{format(new Date(quotation.created_at), 'dd MMMM yyyy')}</span>
-                    </p>
+                <div className="space-y-3 text-sm">
+                    <DetailRow
+                        icon="fa-dollar-sign"
+                        label="Total"
+                        value={formatDollarCurrency(quotation.total_amount)}
+                    />
+                    <DetailRow
+                        icon="fa-calendar-alt"
+                        label="Created"
+                        value={format(new Date(quotation.created_at), 'dd MMMM yyyy')}
+                    />
                     {quotation.updated_at && (
-                        <p className="flex items-center">
-                            <i className="fas fa-edit text-gray-500 w-6" />
-                            <span className="font-medium w-24">Updated:</span>
-                            <span>{format(new Date(quotation.updated_at), 'dd MMMM yyyy')}</span>
-                        </p>
+                        <DetailRow
+                            icon="fa-edit"
+                            label="Updated"
+                            value={format(new Date(quotation.updated_at), 'dd MMMM yyyy')}
+                        />
                     )}
                 </div>
             </div>
