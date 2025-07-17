@@ -1,18 +1,24 @@
-# Use the latest LTS version of Node.js
-FROM node:lts-alpine
-
-# Set the working directory
+FROM node:20-alpine AS builder
 WORKDIR /usr/src/app
 
-# Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-# Copy the rest of the application code
 COPY . .
 
-# Expose the application port
+RUN npm prune --production
+
+FROM node:20-alpine AS final
+
+ENV NODE_ENV=production
+WORKDIR /usr/src/app
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+COPY --from=builder --chown=appuser:appgroup /usr/src/app .
+
+USER appuser
+
 EXPOSE 8080
 
-# Command to run the application
 CMD [ "node", "src/main.js" ]

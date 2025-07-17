@@ -1,14 +1,16 @@
 INSERT INTO products (id, name, description, sku, price, stock, created_at, updated_at) VALUES
-('026b47e8-cc12-4c1a-bc84-c6b72c3fd075', 'Laptop Pro X', 'High-performance laptop with 16GB RAM and 512GB SSD.', 'LPX-001', 12000000, 50, now(), now());
-
-INSERT INTO products (id,name, description, sku, price, stock, created_at, updated_at) VALUES
-('7e8597d3-7077-4d33-af82-3563810afdde', 'Wireless Mouse', 'Ergonomic wireless mouse with adjustable DPI.', 'WM-002', 250000, 200, now(), now());
-
-INSERT INTO products (id, name, description, sku, price, stock, created_at, updated_at) VALUES
-('969c910e-c057-417a-9f4d-b5681d43d21e', 'Mechanical Keyboard', 'RGB mechanical keyboard with brown switches.', 'MK-003', 800000, 75, now(), now());
-
-INSERT INTO products (id, name, description, sku, price, stock, created_at, updated_at) VALUES
-('569edb0a-0e0c-4544-ba08-928649e3c50d', 'USB-C Hub', '7-in-1 USB-C hub with HDMI, USB 3.0, and SD card reader.', 'UCH-004', 400000, 150, now(), now());
-
-INSERT INTO products (id, name, description, sku, price, stock, created_at, updated_at) VALUES
+('f6a7b8c9-d0e1-4f2a-8b4c-5d6e7f8d9e0f', 'ErgoChair Pro+', 'Ergonomic office chair with lumbar support and breathable mesh back.', 'CHR-011', 3500000, 60, now(), now()),
+('5309667f-08e7-4e56-8359-8f20ed16b38c', 'StreamDeck Mini', '6-key customizable LCD controller for live streaming and content creation.', 'STR-012', 1200000, 90, now(), now()),
+('e44b2206-ccd0-4213-aa39-c91979822461', 'Titanium Stylus Pen', 'Precision stylus with palm rejection for digital art and note-taking on tablets.', 'STY-013', 750000, 150, now(), now()),
+('6418a6c4-f277-4316-8dd6-863d04dea17e', 'Portable Projector 1080p', 'Compact and bright projector with built-in battery and speakers.', 'PRJ-014', 2800000, 70, now(), now()),
+('f73a131d-61d8-45fe-ae9f-d5e1a606f9d2', 'Smart LED Light Strip', '2-meter RGBIC light strip with app control and music sync.', 'LGT-015', 450000, 250, now(), now()),
+('3373e5ec-f43f-4d6b-a05f-1cb17886084f', 'Condenser Microphone Kit', 'USB microphone with pop filter and boom arm for podcasting and recording.', 'MIC-016', 1100000, 110, now(), now()),
+('8e72f286-badb-45da-8f46-8036ef1c3b4c', '32" Curved Ultrawide Monitor', 'Immersive 3440x1440 ultrawide monitor with a 100Hz refresh rate.', 'MON-017', 6200000, 35, now(), now()),
+('6a4f21a6-4e95-4fd4-a81f-66de8852920b', 'Silent Mechanical Keyboard', 'Tenkeyless keyboard with linear silent switches for a quiet typing experience.', 'MK-018', 950000, 65, now(), now()),
+('9d691133-2db1-43a8-940e-996aa4575afc', 'Laptop Stand with Cooling Fan', 'Adjustable aluminum laptop stand with dual silent cooling fans.', 'STN-019', 550000, 200, now(), now()),
+('0363fcfb-5312-4adf-9105-cfd6bf6a3ca8', 'VR Headset Pro', 'Next-generation virtual reality headset with inside-out tracking.', 'VRH-020', 5500000, 55, now(), now()),
+('026b47e8-cc12-4c1a-bc84-c6b72c3fd075', 'Laptop Pro X', 'High-performance laptop with 16GB RAM and 512GB SSD.', 'LPX-001', 12000000, 50, now(), now()),
+('7e8597d3-7077-4d33-af82-3563810afdde', 'Wireless Mouse', 'Ergonomic wireless mouse with adjustable DPI.', 'WM-002', 250000, 200, now(), now()),
+('969c910e-c057-417a-9f4d-b5681d43d21e', 'Mechanical Keyboard', 'RGB mechanical keyboard with brown switches.', 'MK-003', 800000, 75, now(), now()),
+('569edb0a-0e0c-4544-ba08-928649e3c50d', 'USB-C Hub', '7-in-1 USB-C hub with HDMI, USB 3.0, and SD card reader.', 'UCH-004', 400000, 150, now(), now()),
 ('bc2ef9a8-f27d-4c4e-ad7c-0c6b8a0098f6', 'External SSD 1TB', 'Portable 1TB external SSD for fast data transfer.', 'ESSD-005', 1500000, 100, now(), now());
