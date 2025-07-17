@@ -109,124 +109,116 @@ export default function FormCreateQuotation() {
     }
 
 
-    return <>
-        <div className="animate-fade-in bg-gray-800 bg-opacity-80 p-8 rounded-xl shadow-custom border border-gray-700 backdrop-blur-sm w-full max-w-md">
+    return (
+        <div className="animate-fade-in bg-white dark:bg-gray-800/80 p-8 rounded-xl shadow-lg dark:shadow-slate-900/50 border border-gray-200 dark:border-gray-700 backdrop-blur-sm w-full max-w-md">
             <div className="text-center mb-8">
-                <div className="inline-block p-3 bg-gradient rounded-full mb-4">
+                <div className="inline-block p-3 bg-blue-600 dark:bg-blue-500 rounded-full mb-4">
                     <i className="fas fa-solid fa-dolly text-3xl text-white" />
                 </div>
-                <h1 className="text-3xl font-bold text-white">ERP System</h1>
-                <p className="text-gray-300 mt-2">Create Quotation</p>
+                {/* ✅ Title and Subtitle Text */}
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">ERP System</h1>
+                <p className="text-gray-500 dark:text-gray-300 mt-2">Create Quotation</p>
             </div>
             <form onSubmit={handleSubmit}>
-
                 {/* Product Drop Down Box */}
                 <div className="mb-4">
-                    <label htmlFor="product" className="block text-gray-300 text-sm font-medium mb-2">
+                    <label htmlFor="product" className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
                         Product
                     </label>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i className="fas fa-tag text-gray-500" />
+                            <i className="fas fa-tag text-gray-400 dark:text-gray-500" />
                         </div>
+                        {/* ✅ Select Input */}
                         <select
                             id="product"
                             name="productId"
                             value={currentItem.productId}
                             onChange={(e) => setCurrentItem(prev => ({ ...prev, productId: e.target.value }))}
-                            className="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none"
+                            className="w-full pl-10 pr-3 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 appearance-none"
                         >
-                            <option value="" disabled>
-                                Choose a product
-                            </option>
+                            <option value="" disabled>Choose a product</option>
                             {products.map((product) => (
                                 <option key={product.id} value={product.id}>{product.name}</option>
                             ))}
                         </select>
                     </div>
-                    
                 </div>
 
                 {/* Unit Price Box */}
                 <div className="mb-4">
-                    <label htmlFor="price" className="block text-gray-300 text-sm font-medium mb-2">
+                    <label htmlFor="price" className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
                         Unit Price
                     </label>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i className="fas fa-money-bill-1 text-gray-500" />
+                            <i className="fas fa-money-bill-1 text-gray-400 dark:text-gray-500" />
                         </div>
+                        {/* ✅ Disabled Input */}
                         <input
                             type="text"
-                            disabled={!currentItem.productId}
+                            disabled
                             value={formatDollarCurrency(currentItem.price)}
-                            className="w-full pl-10 pr-3 py-3 bg-gray-900 bg-opacity-70 border border-gray-600 text-gray-400 rounded-lg focus:outline-none"
+                            className="w-full pl-10 pr-3 py-3 bg-gray-100 dark:bg-gray-900/70 border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 rounded-lg focus:outline-none"
                             placeholder="Product unit price"
-                            required
                             readOnly
                         />
                     </div>
                 </div>
 
-
                 {/* Quantity Box */}
                 <div className="mb-4">
-                    <label htmlFor="quantity" className="block text-gray-300 text-sm font-medium mb-2">
+                    <label htmlFor="quantity" className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
                         Quantity
                     </label>
                     <div className="relative flex items-center">
-                            <button 
-                                type="button"
-                                onClick={() => setCurrentItem(p => ({ ...p, quantity: Math.max(1, p.quantity - 1) }))}
-                                disabled={!currentItem.productId}
-                                className="px-3 py-3 bg-gray-600 text-white rounded-l-lg hover:bg-gray-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-600 disabled:opacity-50 disabled:transform-none"
-                                aria-label="Decrease quantity"
-                            >
-                                    <i className="fas fa-minus" />
-                            </button>
+                        {/* ✅ Stepper Buttons */}
+                        <button
+                            type="button"
+                            onClick={() => setCurrentItem(p => ({ ...p, quantity: Math.max(1, p.quantity - 1) }))}
+                            disabled={!currentItem.productId}
+                            className="px-3 py-3 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-l-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:opacity-50"
+                        >
+                            <i className="fas fa-minus" />
+                        </button>
                         <input
                             type="number"
                             value={currentItem.quantity}
                             onChange={(e) => setCurrentItem(prev => ({ ...prev, quantity: Number(e.target.value) }))}
                             disabled={!currentItem.productId}
-                            className="w-full text-center bg-gray-800 border-y border-gray-700 text-white p-3 outline-none"
+                            className="w-full text-center bg-white dark:bg-gray-800 border-y border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white p-3 outline-none"
                             min="1"
                         />
-                        <button 
+                        <button
                             type="button"
                             onClick={() => setCurrentItem(p => ({ ...p, quantity: p.quantity + 1 }))}
                             disabled={!currentItem.productId}
-                            className="px-3 py-3 bg-gray-600 text-white rounded-r-lg hover:bg-gray-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-600 disabled:opacity-50 disabled:transform-none"
-                            aria-label="Increase quantity"
+                            className="px-3 py-3 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-r-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:opacity-50"
                         >
                             <i className="fas fa-plus" />
                         </button>
                     </div>
                 </div>
 
-
-                {/* --- "Add Product" button --- */}
+                {/* "Add Product" button */}
                 <div className="mb-6">
                     <button
                         type="button"
-                        onClick={() => {
-                            handleAddItem();
-                            setCurrentItem(p => ({ ...p, quantity: 0 }));
-                        }}
-                        disabled={!currentItem.productId}
-                        className="w-full bg-gradient text-white py-3 px-4 rounded-lg font-medium shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 
-                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 
-                                disabled:bg-gray-600 disabled:opacity-50 disabled:transform-none"
+                        onClick={() => handleAddItem()}
+                        disabled={!currentItem.productId || currentItem.quantity === 0}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:bg-gray-400 dark:disabled:bg-gray-500 disabled:opacity-50 disabled:transform-none"
                     >
-                        <i className="fas fa-plus" /> Add Product to Quotation
+                        <i className="fas fa-plus" /> Add Product
                     </button>
                 </div>
 
+                {/* Added Items List */}
                 {orderItems.length > 0 && (
-                    <div className="space-y-2 mb-6 border-t border-gray-700 pt-4">
+                    <div className="space-y-2 mb-6 border-t border-gray-200 dark:border-gray-700 pt-4">
                         {orderItems.map(item => (
-                            <div key={item.productId} className="flex justify-between items-center text-white bg-gray-700/50 p-2 rounded">
-                                <span>{item.name} <span className="text-gray-400">x {item.quantity}</span></span>
+                            // ✅ List Item
+                            <div key={item.productId} className="flex justify-between items-center text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700/50 p-2 rounded">
+                                <span>{item.name} <span className="text-gray-500 dark:text-gray-400">x {item.quantity}</span></span>
                                 <div>
                                     <span className="mr-4">{formatDollarCurrency(item.price * item.quantity)}</span>
                                     <button type="button" onClick={() => handleRemoveItem(item.productId)} className="text-red-500 hover:text-red-400">
@@ -238,19 +230,17 @@ export default function FormCreateQuotation() {
                     </div>
                 )}
 
-
-                {/* Button Create */}
+                {/* "Create" button */}
                 <div className="mb-6">
                     <button
                         type="submit"
                         disabled={orderItems.length === 0}
-                        className="w-full bg-gradient text-white py-3 px-4 rounded-lg font-medium shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 
-                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 
-                                disabled:bg-gray-600 disabled:opacity-50 disabled:transform-none">
+                        className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:bg-gray-400 dark:disabled:bg-gray-500 disabled:opacity-50 disabled:transform-none"
+                    >
                         <i className="fas fa-cart-plus" /> Create
                     </button>
                 </div>
             </form>
         </div>
-    </>
+    );
 }
