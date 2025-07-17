@@ -27,3 +27,14 @@ export const CreateAccount = async ({name, email, password, role}) => {
         })
     })
 }
+
+export const MyProfile = async(token) => {
+    return await fetch(`${import.meta.env.VITE_API_BACKEND_PATH}/users/my-profile`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
