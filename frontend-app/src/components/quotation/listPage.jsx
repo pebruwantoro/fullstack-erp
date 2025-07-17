@@ -4,6 +4,8 @@ import { alertError } from "../../lib/alert";
 import { List as quotationList } from "../../api/quotation.js";
 import { useNavigate } from "react-router";
 import { formatDollarCurrency } from "../../util/format.js";
+import { format } from 'date-fns';
+
 
 export default function QuotationListPage() {
     const [token, _] = useLocalStorage("token");
@@ -60,33 +62,39 @@ export default function QuotationListPage() {
 
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {quotations.map(quotation => (
-                <div key={quotation.id} className="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
-                    <div className="p-6">
-                        <div className="flex items-center mb-3">
-                            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-3 shadow-md flex-shrink-0">
-                                <i className="fas fa-file-invoice-dollar text-white" />
+        <div className="flex flex-col h-full">
+            {/* The grid for the list items (NO flex-grow here) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {quotations.map(quotation => (
+                    <div key={quotation.id} className="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in">
+                        <div className="p-6">
+                            <div className="flex items-center mb-3">
+                                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-3 shadow-md flex-shrink-0">
+                                    <i className="fas fa-file-invoice-dollar text-white" />
+                                </div>
+                                <h2 className="text-lg font-semibold text-white truncate" title={quotation.id}>{quotation.id}</h2>
                             </div>
-                            <h2 className="text-lg font-semibold text-white truncate" title={quotation.id}>{quotation.id}</h2>
-                        </div>
-                        <p className={`text-sm mb-4 h-10 line-clamp-2 ${getStatusColor(quotation.status)}`}>
-                            {quotation.status.toUpperCase()}
-                        </p>
-                        <div className="space-y-3 text-gray-300 ml-2">
-                            <p className="flex items-center"><i className="fas fa-dollar-sign text-gray-500 w-6" /><span className="font-medium w-24">Total:</span><span>{formatDollarCurrency(quotation.total_amount)}</span></p>
-                        </div>
-                        <div className="space-y-3 text-gray-300 ml-2">
-                            <p className="flex items-center"><i className="fas fa-dollar-sign text-gray-500 w-6" /><span className="font-medium w-24">Submission:</span><span>{(quotation.created_at)}</span></p>
+                            <p className={`text-sm mb-4 h-10 line-clamp-2 ${getStatusColor(quotation.status)}`}>
+                                {quotation.status.toUpperCase()}
+                            </p>
+                            <div className="space-y-3 text-gray-300 ml-2">
+                                <p className="flex items-center"><i className="fas fa-dollar-sign text-gray-500 w-6" /><span className="font-medium w-24">Total:</span><span>{formatDollarCurrency(quotation.total_amount)}</span></p>
+                                <p className="flex items-center"><i className="fas fa-calendar-alt text-gray-500 w-6" /><span className="font-medium w-24">Created:</span><span>{format(new Date(quotation.created_at), 'dd MMMM yyyy')}</span></p>
+                                {quotation.updated_at && (
+                                    <p className="flex items-center"><i className="fas fa-edit text-gray-500 w-6" /><span className="font-medium w-24">Updated:</span><span>{format(new Date(quotation.updated_at), 'dd MMMM yyyy')}</span></p>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            ))}
-            <div className="mt-6 flex items-center justify-start">
+                ))}
+            </div>
+            
+            {/* Pagination controls with mt-auto, pushed to the bottom */}
+            <div className="mt-auto pt-6 flex items-center justify-start">
                 <button
                     onClick={handlePrevPage}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 bg-gray-700 text-white rounded-md mr-2 disabled:opacity-50"
+                    className="px-4 py-2 bg-gray-700 text-white rounded-md mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <i className="fas fa-chevron-left" />
                 </button>
@@ -96,7 +104,7 @@ export default function QuotationListPage() {
                 <button
                     onClick={handleNextPage}
                     disabled={currentPage >= totalPages}
-                    className="px-4 py-2 bg-gray-700 text-white rounded-md ml-2 disabled:opacity-50"
+                    className="px-4 py-2 bg-gray-700 text-white rounded-md ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <i className="fas fa-chevron-right" />
                 </button>
