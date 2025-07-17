@@ -26,3 +26,14 @@ export const List = async (token, params = {}) => {
         },
     })
 }
+
+export const ApprovedQuotation = async (token, id) => {
+    return await fetch(`${import.meta.env.VITE_API_BACKEND_PATH}/quotations/${id}/approve`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}

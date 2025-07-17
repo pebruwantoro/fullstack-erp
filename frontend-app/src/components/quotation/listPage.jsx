@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useLocalStorage } from "react-use";
 import { alertError, alertSuccess } from "../../lib/alert";
 import { List as quotationList } from "../../api/quotation.js";
@@ -19,41 +19,48 @@ export default function QuotationListPage() {
     const [filterDate, setFilterDate] = useState('');
     const outlet = useOutlet();
 
+    const fetchQuotations = useCallback(async () => {
+        if (!token) return;
+
+        let params = {
+            page: Number(currentPage),
+            per_page: Number(6),
+        };
+
+        if (role === UserRole.SALES) {
+            params.status = QuotationStatus.PENDING;
+        }
+
+        if (filterDate) {
+            params.date = filterDate;
+        }
+
+        const response = await quotationList(token, params);
+        const responseBody = await response.json();
+        
+        if (response.ok) {
+            setQuotations(responseBody.data.list);
+            setTotalPages(responseBody.data.pagination.total_page);
+        } else {
+            alertError(responseBody.message || 'Failed to load quotations.');
+        }
+    }, [token, currentPage, filterDate, role]);
+
     useEffect(() => {
         if (!token) {
             navigate('/login');
             return;
         }
-
         if (outlet) return; 
         
-        async function fetchQuotations() {
-            let params = {
-                page: Number(currentPage),
-                per_page: Number(9),
-            };
-
-            if (role === UserRole.SALES){
-                params.status = QuotationStatus.PENDING;
-            }
-
-            if (filterDate) {
-                console.log('filter date: ', filterDate)
-                params.date = filterDate;
-            }
-            console.log('query params: ', params)
-            const response = await quotationList(token, params);
-            const responseBody = await response.json();
-            
-            if(response.status === 200) {
-                setQuotations(responseBody.data.list);
-                setTotalPages(responseBody.data.pagination.total_page);
-            } else {
-                alertError(response.message)
-            }
-        }
         fetchQuotations();
-    }, [token, navigate, currentPage, filterDate, role, outlet]);
+    }, [token, navigate, outlet, fetchQuotations]);
+
+
+    const handleApprovalSuccess = useCallback(() => {
+        setCurrentPage(1);
+    }, []);
+
 
     const handleDateChange = (e) => {
         setFilterDate(e.target.value);
@@ -67,9 +74,10 @@ export default function QuotationListPage() {
         const responseBody = await response.json();
         
         if(response.status === 201) {
-            alertSuccess(responseBody.message)
+            alertSuccess(responseBody.message);
+            fetchQuotations();
         } else {
-            alertError(response.message)
+            alertError(responseBody.message);
         }
     }
 
@@ -79,7 +87,6 @@ export default function QuotationListPage() {
             <div className="mb-6 flex justify-start items-end gap-4">
                 { role === UserRole.CUSTOMER && (
                     <Link
-                    onClick={{ state: { refresh: true } }}
                     to="/quotations/create"
                     className="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800"
                     >
@@ -87,7 +94,6 @@ export default function QuotationListPage() {
                         Create Quotation
                     </Link>
                 )}
-
                 { role === UserRole.SALES && (
                     <button
                     onClick={handleGenerateSalesOrder}
@@ -97,10 +103,7 @@ export default function QuotationListPage() {
                         Generate Sales Order
                     </button>
                 )}
-
                 <div>
-                    <label htmlFor="date-filter" className="block text-sm font-medium text-gray-300 mb-2">
-                    </label>
                     <div className="relative">
                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i className="fas fa-calendar-alt text-gray-500" />
@@ -119,7 +122,11 @@ export default function QuotationListPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {quotations.length > 0 ? (
                     quotations.map(quotation => (
-                        <QuotationCard key={quotation.id} quotation={quotation} />
+                        <QuotationCard 
+                            key={quotation.id} 
+                            quotation={quotation}
+                            onApprovalSuccess={handleApprovalSuccess}
+                        />
                     ))
                 ) : (
                     <div className="col-span-3 text-center text-gray-400 py-10">
