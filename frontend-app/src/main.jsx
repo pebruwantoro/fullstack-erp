@@ -6,6 +6,7 @@ import { Layout, SideBarLayout } from './components/layout.jsx'
 import Register from './components/user/register.jsx';
 import ProductListPage from './components/product/listPage.jsx';
 import FormCreateQuotation from './components/quotation/create.jsx'
+import './index.css';
 
 
 createRoot(document.getElementById('root')).render(
