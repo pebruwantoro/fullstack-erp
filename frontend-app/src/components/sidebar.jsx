@@ -3,11 +3,13 @@ import { Link, useNavigate, useLocation } from "react-router";
 
 export default function Sidebar() {
     const [_, setToken] = useLocalStorage("token");
+    const [__, setRole] = useLocalStorage("role");
     const navigate = useNavigate();
     const location = useLocation();
 
     const handleLogout = () => {
         setToken('');
+        setRole('');
         navigate('/login');
     };
 
