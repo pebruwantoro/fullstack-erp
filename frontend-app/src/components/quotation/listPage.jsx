@@ -5,6 +5,7 @@ import { List as quotationList } from "../../api/quotation.js";
 import { useNavigate } from "react-router";
 import { formatDollarCurrency } from "../../util/format.js";
 import { format } from 'date-fns';
+import Pagination from "../pagination.jsx";
 
 
 export default function QuotationListPage() {
@@ -52,14 +53,6 @@ export default function QuotationListPage() {
         }
     };
 
-    const handlePrevPage = () => {
-        setCurrentPage((prev) => Math.max(prev - 1, 1));
-    };
-
-    const handleNextPage = () => {
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-    };
-
 
     return (
         <div className="flex flex-col h-full">
@@ -89,26 +82,11 @@ export default function QuotationListPage() {
                 ))}
             </div>
             
-            {/* Pagination controls with mt-auto, pushed to the bottom */}
-            <div className="mt-auto pt-6 flex items-center justify-start">
-                <button
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                    className="px-4 py-2 bg-gray-700 text-white rounded-md mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <i className="fas fa-chevron-left" />
-                </button>
-                <span className="text-gray-300">
-                    Page {currentPage} of {totalPages}
-                </span>
-                <button
-                    onClick={handleNextPage}
-                    disabled={currentPage >= totalPages}
-                    className="px-4 py-2 bg-gray-700 text-white rounded-md ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <i className="fas fa-chevron-right" />
-                </button>
-            </div>
+            <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+            />
         </div>
     );
 }
