@@ -6,10 +6,12 @@ import { useNavigate } from "react-router";
 import { formatDollarCurrency } from "../../util/format.js";
 import { format } from 'date-fns';
 import Pagination from "../pagination.jsx";
+import { UserRole, QuotationStatus } from "../../constant/constant.js";
 
 
 export default function QuotationListPage() {
     const [token, _] = useLocalStorage("token");
+    const [role, __] = useLocalStorage("role", "");
     const [quotations, setQuotations] = useState([]);
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +27,10 @@ export default function QuotationListPage() {
                 page: Number(currentPage),
                 per_page: Number(9),
             };
+
+            if (role === UserRole.SALES){
+                params.status = QuotationStatus.PENDING;
+            }
             
             const response = await quotationList(token, params);
             const responseBody = await response.json();
