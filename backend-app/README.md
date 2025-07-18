@@ -63,9 +63,14 @@ REDIS_PORT=6379
     ```bash
     docker-compose down
 
-3.  **To delete the containers volume**
+4.  **To delete the containers volume**
     ```bash
     docker-compose down -v
+
+## Insert the Product Dummy Data
+1.  **Open `./src/dummy/product.sql` file**
+
+2.  **Running that file on your database.**    
 
 ## API Docs
 
