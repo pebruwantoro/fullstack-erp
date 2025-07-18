@@ -1,12 +1,38 @@
-# React + Vite
+# Frontend React + Vite Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a frontend application built with React and Vite.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js (v20 or higher)
+- npm
 
-## Expanding the ESLint configuration
+## Environment Variables
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Create a `.env` file in the root of the `frontend-app` directory and add the following environment variable. You can use the `.env.example` file as a template.
+
+```
+VITE_API_BACKEND_PATH=http://localhost:8080
+```
+
+## Running the Project
+
+1.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
+
+2.  **Run the application in development mode**
+    ```bash
+    npm run dev
+    ```
+    The application will be running on `http://localhost:3000` by default.
+
+3.  **Build for production**
+    ```bash
+    npm run build
+    ```
+
+4.  **Preview the production build**
+    ```bash
+    npm run preview
