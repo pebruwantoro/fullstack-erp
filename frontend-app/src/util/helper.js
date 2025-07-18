@@ -1,5 +1,6 @@
 
 import { SalesOrderStatus, QuotationStatus } from "../constant/constant.js";
+import { ErrorConstant } from "../constant/error.js";
 
 export const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
@@ -21,3 +22,28 @@ export const getStatusColor = (status) => {
             return 'text-gray-400';
     }
 };
+
+export const emailValidation = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        throw new Error(ErrorConstant.ErrorEmailInvalid)
+    }
+}
+
+export const passwordValidation = (password) => {
+    if (password.length < 8) {
+        throw new Error(ErrorConstant.ErrorPasswordInvalidMin);
+    }
+    if (!/[a-z]/.test(password)) {
+        throw new Error(ErrorConstant.ErrorPasswordInvalidNotContainLowercase);
+    }
+    if (!/[A-Z]/.test(password)) {
+        throw new Error(ErrorConstant.ErrorPasswordInvalidNotContainUppercase);
+    }
+    if (!/\d/.test(password)) {
+        throw new Error(ErrorConstant.ErrorPasswordInvalidNotContainNumber);
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        throw new Error(ErrorConstant.ErrorPasswordInvalidNotContainSpecialCharacter);
+    }
+}
