@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CreateAccount } from "../../api/user.js";
 import { alertError, alertSuccess } from "../../lib/alert.js";
+import { emailValidation, passwordValidation } from '../../util/helper.js';
 
 export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const [name, setName] = useState('');
     const [role, setRole] = useState('customer');
 
@@ -26,6 +29,28 @@ export default function Register() {
         }
     }
 
+    async function handlePasswordChange(e) {
+        const password = e.target.value;
+        setPassword(password);
+        try {
+            passwordValidation(password);
+            setPasswordError(''); 
+        } catch (error) {
+            setPasswordError(error.message);
+        }
+    }
+
+    async function handleEmailChange(e) {
+        const email = e.target.value;
+        setEmail(email);
+        try {
+            emailValidation(email);
+            setEmailError(''); 
+        } catch (error) {
+            setEmailError(error.message);
+        }
+    }
+
     return (
         <>
             <div className="animate-fade-in bg-white dark:bg-slate-800/80 p-8 rounded-xl shadow-lg dark:shadow-slate-900/50 border border-gray-200 dark:border-slate-700 backdrop-blur-sm w-full max-w-md">
@@ -37,7 +62,6 @@ export default function Register() {
                     <p className="text-gray-500 dark:text-gray-300 mt-2">Register account</p>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    {/* Full Name */}
                     <div className="mb-4">
                         <label
                             htmlFor="name"
@@ -78,9 +102,11 @@ export default function Register() {
                                 className="w-full pl-10 pr-3 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                                 placeholder="Enter your email"
                                 required
-                                value={email} onChange={(e) => setEmail(e.target.value)}
+                                value={email} 
+                                onChange={handleEmailChange}
                             />
                         </div>
+                        {emailError && <p className="border-red-500 dark:border-red-500 focus:ring-red-500">{emailError}</p>}
                     </div>
                     <div className="mb-4">
                         <label
@@ -100,9 +126,11 @@ export default function Register() {
                                 className="w-full pl-10 pr-3 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                                 placeholder="Enter your password"
                                 required
-                                value={password} onChange={(e) => setPassword(e.target.value)}
+                                value={password}
+                                onChange={handlePasswordChange}
                             />
                         </div>
+                        {password && <p className="border-red-500 dark:border-red-500 focus:ring-red-500">{passwordError}</p>}
                     </div>
                     <div className="mb-6">
                         <label htmlFor="role" className="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">

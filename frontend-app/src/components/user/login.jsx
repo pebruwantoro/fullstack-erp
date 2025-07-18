@@ -3,10 +3,12 @@ import { Login as apiLogin, MyProfile as userProfile } from '../../api/user.js';
 import { alertError } from "../../lib/alert";
 import { useState } from 'react';
 import { useLocalStorage } from 'react-use';
+import { emailValidation } from '../../util/helper.js';
 
 export default function Login() {
 
     const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
     const [_, setToken] = useLocalStorage("token", "");
     const navigate = useNavigate();
@@ -40,6 +42,17 @@ export default function Login() {
         }
     }
 
+    async function handleEmailChange(e) {
+        const email = e.target.value;
+        setEmail(email);
+        try {
+            emailValidation(email);
+            setEmailError(''); 
+        } catch (error) {
+            setEmailError(error.message);
+        }
+    }
+
     return (
         <>
             <div className="animate-fade-in bg-white dark:bg-slate-800/80 p-8 rounded-xl shadow-lg dark:shadow-slate-900/50 border border-gray-200 dark:border-slate-700 backdrop-blur-sm w-full max-w-md">
@@ -69,9 +82,11 @@ export default function Login() {
                                 className="w-full pl-10 pr-3 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                                 placeholder="Enter your email"
                                 required
-                                value={email} onChange={(e) => setEmail(e.target.value)}
+                                value={email} 
+                                onChange={handleEmailChange}
                             />
                         </div>
+                        {emailError && <p className="border-red-500 dark:border-red-500 focus:ring-red-500">{emailError}</p>}
                     </div>
                     <div className="mb-4">
                         <label
