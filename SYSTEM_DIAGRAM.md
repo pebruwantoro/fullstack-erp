@@ -4,6 +4,8 @@ This document outlines the system design, including the database model and featu
 
 ## Database Model
 
+![Database Design](./database-design/database-design.png)
+
 The database consists of the following tables:
 
 -   **users**: Stores user information, including authentication details and roles (customer, sales).
@@ -37,6 +39,7 @@ The database consists of the following tables:
     -   `customerId` (UUID, FK to users.id)
     -   `status` (String, Enum: 'invoiced', 'shipped', 'completed', 'canceled')
     -   `totalAmount` (Integer)
+    
 
 ## Backend Features
 
